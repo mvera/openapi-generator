@@ -2,6 +2,7 @@
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */{{#description}}
 @ApiModel(description = "{{{description}}}"){{/description}}
+{{#useJacksonAnnotations}}
 {{#jackson}}
 @JsonPropertyOrder({
 {{#vars}}
@@ -9,6 +10,7 @@
 {{/vars}}
 })
 {{/jackson}}
+{{/useJacksonAnnotations}}
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
 public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#serializableModel}}implements Serializable{{/serializableModel}} {
   {{#vars}}
@@ -22,10 +24,12 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
     {{/mostInnerItems}}
     {{/isContainer}}
     {{/isEnum}}
+  {{#useJacksonAnnotations}}
   {{#jackson}}
   public static final String JSON_PROPERTY_{{nameInSnakeCase}} = "{{baseName}}";
   @JsonProperty(JSON_PROPERTY_{{nameInSnakeCase}})
   {{/jackson}}
+  {{/useJacksonAnnotations}}
   {{#gson}}
   public static final String SERIALIZED_NAME_{{nameInSnakeCase}} = "{{baseName}}";
   @SerializedName(SERIALIZED_NAME_{{nameInSnakeCase}})
@@ -86,9 +90,11 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
  {{#vendorExtensions.x-extra-annotation}}
   {{{vendorExtensions.x-extra-annotation}}}
   {{/vendorExtensions.x-extra-annotation}}
+  {{#useJacksonAnnotations}}
   {{#jackson}}
   @JsonProperty("{{baseName}}")
   {{/jackson}}
+  {{/useJacksonAnnotations}}
   @ApiModelProperty({{#example}}example = "{{{example}}}", {{/example}}{{#required}}required = {{required}}, {{/required}}value = "{{{description}}}")
   {{#useBeanValidation}}{{>beanValidation}}{{/useBeanValidation}}
   public {{{datatypeWithEnum}}} {{getter}}() {
